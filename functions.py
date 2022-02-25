@@ -66,16 +66,22 @@ def paint_pattern(image, pattern, center_xy, alpha):
     :param alpha: Strength of pattern that is painted (in transparency)
     :return: image with pattern painted on it
     """
-    img_dim_x, img_dim_y, _ = image.shape
     pat_dim_x, pat_dim_y, _ = pattern.shape
     (x, y) = center_xy
-    pat_left_imgviewport = int(math.floor(x - pat_dim_x / 2))
-    pat_right_imgviewport = int(math.ceil(x + pat_dim_x / 2))
-    pat_top_imgviewport = int(math.floor(y - pat_dim_y / 2))
-    pat_bot_imgviewport = int(math.ceil(y + pat_dim_y / 2))
+    if pat_dim_x % 2 == 0:
+        pat_left_imgviewport = int(math.floor(x - pat_dim_x / 2))
+        pat_right_imgviewport = int(math.ceil(x + pat_dim_x / 2))
+    else:
+        pat_left_imgviewport = int(math.floor(x - pat_dim_x / 2))
+        pat_right_imgviewport = int(math.floor(x + pat_dim_x / 2))
+    if pat_dim_x % 2 == 0:
+        pat_top_imgviewport = int(math.floor(y - pat_dim_y / 2))
+        pat_bot_imgviewport = int(math.ceil(y + pat_dim_y / 2))    
+    else:
+        pat_top_imgviewport = int(math.floor(y - pat_dim_y / 2))
+        pat_bot_imgviewport = int(math.floor(y + pat_dim_y / 2))
 
     image[pat_left_imgviewport:pat_right_imgviewport, pat_top_imgviewport:pat_bot_imgviewport] += pattern * alpha
-
     return image, (pat_left_imgviewport, pat_top_imgviewport), (pat_right_imgviewport, pat_bot_imgviewport)
 
 def linalg_solve_img(target_image, pattern_positions, patterns, pad, x_max, y_max):
